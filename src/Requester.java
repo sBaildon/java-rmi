@@ -3,8 +3,10 @@ import java.rmi.Naming;
 import java.util.Random;
 
 public class Requester implements Serializable {
-	final static int uid = 32877315;
-	final static int passcode = 1340426414;
+	final static int UID = 32877315;
+	final static int PASSCODE = 1340426414;
+	final static String SERVER = "scc311-server.lancs.ac.uk/";
+	final static String SERVER_NAME = "CW_server";
 
 	public static void main(String[] args) {
 		Client_request request;
@@ -12,9 +14,9 @@ public class Requester implements Serializable {
 		Server_response doc;
 		
 		try {
-			serv = (CW_server_interface) Naming.lookup("rmi://scc311-server.lancs.ac.uk/CW_server");
+			serv = (CW_server_interface) Naming.lookup("rmi://" + SERVER + SERVER_NAME);
 			request = GenerateRequest();
-			doc = serv.getSpec(uid, request);
+			doc = serv.getSpec(UID, request);
 		} catch (Exception re) {
 			System.out.println("RemoteException"+re);			
 		} 
@@ -26,7 +28,7 @@ public class Requester implements Serializable {
 	}
 	
 	static Client_request GenerateRequest() {
-		return new Client_request(uid, GenerateNonse(), passcode);
+		return new Client_request(UID, GenerateNonse(), PASSCODE);
 	}
 
 }
