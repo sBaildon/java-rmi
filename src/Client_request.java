@@ -14,9 +14,9 @@ public class Client_request implements Serializable{
 	private long passcode;
 
     /*******************************************
-     Note: nonse feild is just a random number
+     Note: nonse field is just a random number
            So just generate a random number using
-           any random nnumber generator
+           any random number generator
     *********************************************/
 
 
