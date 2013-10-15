@@ -16,32 +16,40 @@ public class Requester implements Serializable {
 		CW_server_interface serv;
 		Client_request request;
 		Server_response response;
-		File file = new File("E:/spec.doc");
-		OutputStream doc = null;
-		try {
-			doc = new FileOutputStream(file);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		OutputStream stream;
+		File spec;
 		
 		try {
 			serv = (CW_server_interface) Naming.lookup("rmi://" + SERVER + "/" + SERVER_NAME);
-			request = GenerateRequest();
+			request = generateRequest();
 			response = serv.getSpec(UID, request);
-			response.write_to(doc);
+			
+			if (isWindows()) {				
+				spec = new File(System.getenv("USERPROFILE") + "/spec.doc");
+			} else {
+				spec = new File(System.getenv("HOME") + "/spec.doc");
+			}
+			
+			stream = new FileOutputStream(spec);
+			response.write_to(stream);
 		} catch (Exception re) {
 			System.out.println("RemoteException " + re);			
 		} 
 	}
 	
-	static int GenerateNonse() {
+	static int generateNonse() {
 		Random rand = new Random();
 		return rand.nextInt();
 	}
 	
-	static Client_request GenerateRequest() {
-		return new Client_request(UID, GenerateNonse(), PASSCODE);
+	static Client_request generateRequest() {
+		return new Client_request(UID, generateNonse(), PASSCODE);
+	}
+	
+	/* Check for Windows OS, assume UNIX if not */
+	static boolean isWindows() {
+		String OS = System.getProperty("os.name").toLowerCase();		
+		return (OS.indexOf("win") >= 0);
 	}
 
 }
