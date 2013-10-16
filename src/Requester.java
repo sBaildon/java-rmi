@@ -56,7 +56,7 @@ public class Requester implements Serializable {
 	
 	static Object readKey(String file) {
 		try {
-			FileInputStream fis = new FileInputStream();
+			FileInputStream fis = new FileInputStream(file);
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			Object obj = (Object) ois.readObject();
 			return obj;
