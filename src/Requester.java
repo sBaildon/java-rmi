@@ -54,6 +54,18 @@ public class Requester implements Serializable {
 		}
 	}
 	
+	static Object readKey(String file) {
+		try {
+			FileInputStream fis = new FileInputStream();
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			Object obj = (Object) ois.readObject();
+			return obj;
+		} catch (Exception e) {
+			System.out.println("Failed reading key\n" + e);
+		}
+		return null;
+	}
+	
 	/* Check for Windows OS, assume UNIX if not */
 	static boolean isWindows() {
 		String OS = System.getProperty("os.name").toLowerCase();		
