@@ -1,14 +1,16 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.rmi.Naming;
 import java.util.Random;
 
+import javax.crypto.*;
+import javax.crypto.spec.*;
+
 public class Requester implements Serializable {
 	final static int UID = 32877315;
-	final static int PASSCODE = 1340426414;
+	final static long PASSCODE = 1340426414;
 	final static String SERVER = "scc311-server.lancs.ac.uk";
 	final static String SERVER_NAME = "CW_server";
 
@@ -21,9 +23,9 @@ public class Requester implements Serializable {
 		
 		try {
 			serv = (CW_server_interface) Naming.lookup("rmi://" + SERVER + "/" + SERVER_NAME);
-			request = generateRequest();
+			request = generateRequest(false);
 			response = serv.getSpec(UID, request);
-			
+
 			if (isWindows()) {				
 				spec = new File(System.getenv("USERPROFILE") + "/spec.doc");
 			} else {
@@ -32,6 +34,7 @@ public class Requester implements Serializable {
 			
 			stream = new FileOutputStream(spec);
 			response.write_to(stream);
+			stream.close();
 		} catch (Exception re) {
 			System.out.println("RemoteException " + re);			
 		} 
@@ -42,8 +45,13 @@ public class Requester implements Serializable {
 		return rand.nextInt();
 	}
 	
-	static Client_request generateRequest() {
-		return new Client_request(UID, generateNonse(), PASSCODE);
+	/* True for encrypted, false for passcode auth */
+	static Client_request generateRequest(boolean crypto) {
+		if (!crypto) {
+			return new Client_request(UID, generateNonse(), PASSCODE);
+		} else {
+			return new Client_request(UID, generateNonse());
+		}
 	}
 	
 	/* Check for Windows OS, assume UNIX if not */
