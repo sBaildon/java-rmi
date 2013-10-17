@@ -24,7 +24,7 @@ public class Requester implements Serializable {
 		try {
 			serv = (CW_server_interface) Naming.lookup("rmi://" + SERVER + "/" + SERVER_NAME);
 			request = generateRequest(false);
-			response = serv.getSpec(UID, request);
+			//response = serv.getSpec(UID, request);
 
 			if (isWindows()) {				
 				spec = new File(System.getenv("USERPROFILE") + "/spec.doc");
