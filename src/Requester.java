@@ -1,12 +1,13 @@
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.rmi.Naming;
 import java.util.Random;
 
 import javax.crypto.*;
-import javax.crypto.spec.*;
 
 public class Requester implements Serializable {
 	final static int UID = 32877315;
@@ -23,7 +24,8 @@ public class Requester implements Serializable {
 		
 		try {
 			serv = (CW_server_interface) Naming.lookup("rmi://" + SERVER + "/" + SERVER_NAME);
-			request = generateRequest(false);
+			request = generateRequest(true);
+			
 			//response = serv.getSpec(UID, request);
 
 			if (isWindows()) {				
@@ -33,7 +35,7 @@ public class Requester implements Serializable {
 			}
 			
 			stream = new FileOutputStream(spec);
-			response.write_to(stream);
+			ServObj.write_to(stream);
 			stream.close();
 		} catch (Exception re) {
 			System.out.println("RemoteException " + re);			
@@ -41,7 +43,7 @@ public class Requester implements Serializable {
 	}
 	
 	static int generateNonse() {
-		Random rand = new Random();
+		Random rand = new Random(2000);
 		return rand.nextInt();
 	}
 	
@@ -54,11 +56,13 @@ public class Requester implements Serializable {
 		}
 	}
 	
-	static Object readKey(String file) {
+	/* Open a file into an object */
+	static Object readFile(String file) {
 		try {
 			FileInputStream fis = new FileInputStream(file);
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			Object obj = (Object) ois.readObject();
+			ois.close();
 			return obj;
 		} catch (Exception e) {
 			System.out.println("Failed reading key\n" + e);
