@@ -22,7 +22,6 @@ public class Requester implements Serializable {
 		CW_server_interface serv;
 		Client_request request;
 		Server_response response;
-		Scanner inputScanner;
 		
 		try {
 			serv = (CW_server_interface) Naming.lookup("rmi://" + SERVER + "/" + SERVER_NAME);
@@ -33,7 +32,7 @@ public class Requester implements Serializable {
 		}	
 		
 		char input;
-		inputScanner = new Scanner(System.in);
+		Scanner inputScanner = new Scanner(System.in);
 		
 		do {
 			System.out.print("Encrypt? (y/n) ");
@@ -90,8 +89,7 @@ public class Requester implements Serializable {
 			return new Client_request(UID, generateNonse());
 		}
 	}
-	
-	/* Open a file into an object */
+
 	static Object readFile(String file) {
 		try {
 			FileInputStream fis = new FileInputStream(file);
@@ -104,7 +102,10 @@ public class Requester implements Serializable {
 		}
 		return null;
 	}
-	
+
+    /* Takes a server response, a filename and writes
+     * the bytes to the file.
+     */
 	static void writeFile(String filePath, Server_response resp) {
 		File file;
 		OutputStream stream;
